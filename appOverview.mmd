@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant UI as User Interface
+    participant VM as ViewModel
+    participant Repo as Repository
+    participant DB as Database
+    participant API as Open-Meteo API
+
+    UI->>VM: Request current weather and forecast
+    VM->>Repo: Load weather data
+    Repo->>DB: Check stored weather and forecast
+
+    alt Stored data is available
+        DB-->>Repo: Return current weather and forecast
+    else Data must be refreshed
+        Repo->>API: Request current weather and 7-day forecast
+        API-->>Repo: Return weather and forecast
+        Repo->>DB: Store updated weather data
+    end
+
+    Repo-->>VM: Return weather and forecast
+    VM-->>UI: Display current weather and forecast
